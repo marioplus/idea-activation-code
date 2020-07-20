@@ -1,0 +1,4 @@
+server:
+  servlet:
+    context-path: /idea/activationCode
+  port: 8080
