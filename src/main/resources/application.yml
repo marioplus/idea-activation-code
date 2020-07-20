@@ -2,3 +2,5 @@ server:
   servlet:
     context-path: /idea/activationCode
   port: 8080
+activation-code-url: http://idea.medeming.com/jets/images/jihuoma.zip
+base-save-path: C:/Users/mario/Desktop/
