@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: "Consolas", "Microsoft YaHei UI", sans-serif;
+        }
+
+        body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .code {
+            border-radius: 3px;
+            width: 80%;
+            margin: 16px;
+            /*background: darkgray;*/
+            border: 1px solid rgba(0, 0, 0, 0.12)
+        }
+
+        .code-header {
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .code-title {
+            color: rgba(0, 0, 0, 0.38);
+            font-weight: bold;
+        }
+
+        .code-content {
+            width: 100%;
+            padding: 16px;
+        }
+
+        .code-content textarea {
+            border: none;
+            color: #4caf50;
+            max-width: calc(100% - 32px);
+            width: 100%;
+            height: 200px;
+            overflow-y: auto;
+            display: inline-flex;
+            word-break: break-all;
+            resize: none;
+        }
+
+        .code-btn-copy {
+            user-select: none;
+            padding: 6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transition: all .2s;
+        }
+
+        .code-btn-copy:hover {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .code-btn-copy:active {
+            background: rgba(0, 0, 0, 0.24);
+        }
+
+        .code-btn-copy .icon {
+            display: flex;
+        }
+
+        /* region 滚动条*/
+        .bar::-webkit-scrollbar {
+            padding-left: 20px;
+            width: 5px;
+        }
+
+        .bar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.38);
+            border-radius: 2px;
+        }
+
+        /* endregion 滚动条*/
+
+        /* region toast */
+        #m-toast {
+            display: none;
+            padding: 10px;
+            font-size: 14px;
+            color: #ffffff;
+            position: absolute;
+            max-width: 568px;
+            min-width: 200px;
+            background: rgba(0, 0, 0, 0.87);
+            justify-content: center;
+            bottom: 0;
+            text-align: center;
+            word-break: break-all;
+            -webkit-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+            box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+            border-radius: 3px;
+        }
+
+        /* endregion toast */
+    </style>
+    <script type="application/javascript">
+        function copyCode(e) {
+            const filename = e.parentNode.innerText;
+            const codeElement = e.parentElement.nextElementSibling
+            console.log(codeElement.textContent);
+            if (this.copyToClipboard(codeElement.textContent)) {
+                this.showToast(`已复制：${filename}`);
+            } else {
+                this.showToast('复制失败');
+            }
+        }
+
+        function copyToClipboard(text) {
+            try {
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                return true
+            } catch (e) {
+                return false
+            }
+        }
+
+        function showToast(message) {
+            let toast = document.getElementById('m-toast');
+            toast.innerText = message;
+            toast.style.display = "flex";
+            setTimeout(() => toast.style.display = "none", 3000);
+        }
+    </script>
+</head>
+<body>
+<div th:each="k:${codeMap.keySet()}" class="code">
+    <div class="code-header">
+        <div th:text="${k}" class="code-title">Example</div>
+        <div class="code-btn-copy" onclick="copyCode(this)">
+            <svg t="1595262151661" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 p-id="5342" width="24" height="24">
+                <path d="M876.8 147.2C864 134.4 851.2 128 832 128L384 128C345.6 128 320 153.6 320 192l0 64L192 256C160 256 128 281.6 128 320l0 576c0 38.4 25.6 64 64 64l512 0c32 0 64-25.6 64-64l0-64 64 0c38.4 0 64-25.6 64-64L896 192C896 172.8 889.6 160 876.8 147.2zM640 832 256 832l0-64 384 0L640 832zM640 640 256 640 256 576l384 0L640 640zM640 448 256 448 256 384l384 0L640 448zM832 768l-64 0L768 320c0-32-25.6-64-64-64L384 256 384 192c0 0 441.6 0 448 0C832 198.4 832 768 832 768z"
+                      p-id="5343" fill="#8a8a8a"></path>
+            </svg>
+        </div>
+    </div>
+    <div class="code-content">
+        <textarea class="bar" readonly="true" th:text="${codeMap.get(k)}">0W7XBZNUZ-eyJsaWNlbnNlSWQiOiJBMFc3WEJaTlVaIiwibGljZW5zZWVOYW1lIjoi5rC45LmF5r+A5rS7IGlkZWEubWVkZW1pbmcuY29tIiwiYXNzaWduZWVOYW1lIjoiIiwiYXNzaWduZWVFbWFpbCI6IiIsImxpY2Vuc2VSZXN0cmljdGlvbiI6IiIsImNoZWNrQ29uY3VycmVudFVzZSI6ZmFsc2UsInByb2R1Y3RzIjpbeyJjb2RlIjoiSUkiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6ZmFsc2V9LHsiY29kZSI6IkFDIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOmZhbHNlfSx7ImNvZGUiOiJEUE4iLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUlNDIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOnRydWV9LHsiY29kZSI6IlBTIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOmZhbHNlfSx7ImNvZGUiOiJSU0YiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiR08iLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6ZmFsc2V9LHsiY29kZSI6IkRNIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOnRydWV9LHsiY29kZSI6IkNMIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOmZhbHNlfSx7ImNvZGUiOiJSUzAiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUkMiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUkQiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6ZmFsc2V9LHsiY29kZSI6IlBDIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOmZhbHNlfSx7ImNvZGUiOiJSU1YiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUlNVIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOmZhbHNlfSx7ImNvZGUiOiJSTSIsInBhaWRVcFRvIjoiMjAyMC0wOC0xNyIsImV4dGVuZGVkIjpmYWxzZX0seyJjb2RlIjoiV1MiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6ZmFsc2V9LHsiY29kZSI6IkRCIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOmZhbHNlfSx7ImNvZGUiOiJEQyIsInBhaWRVcFRvIjoiMjAyMC0wOC0xNyIsImV4dGVuZGVkIjp0cnVlfSx7ImNvZGUiOiJQREIiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUFdTIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOnRydWV9LHsiY29kZSI6IlBHTyIsInBhaWRVcFRvIjoiMjAyMC0wOC0xNyIsImV4dGVuZGVkIjp0cnVlfSx7ImNvZGUiOiJQUFMiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUFBDIiwicGFpZFVwVG8iOiIyMDIwLTA4LTE3IiwiZXh0ZW5kZWQiOnRydWV9LHsiY29kZSI6IlBSQiIsInBhaWRVcFRvIjoiMjAyMC0wOC0xNyIsImV4dGVuZGVkIjp0cnVlfSx7ImNvZGUiOiJQU1ciLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiRFAiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX0seyJjb2RlIjoiUlMiLCJwYWlkVXBUbyI6IjIwMjAtMDgtMTciLCJleHRlbmRlZCI6dHJ1ZX1dLCJtZXRhZGF0YSI6IjAxMjAyMDA3MThQUEFNMDAwMDA1IiwiaGFzaCI6IjE4OTM5Njg0LzA6LTg3NzMzMjgzIiwiZ3JhY2VQZXJpb2REYXlzIjo3LCJhdXRvUHJvbG9uZ2F0ZWQiOmZhbHNlLCJpc0F1dG9Qcm9sb25nYXRlZCI6ZmFsc2V9-CSChLFDGxa/CHrUufZg+OFlUEjMCrPwoZwsimd4s9ZpHlLw5EaIxMSgslIWRTTKXaXdtzd65NEbHgjVVmlskRXock+rqePq9+9+pXs98vwLl1Tp5iUz9Q7XWUIQ2spfGLFWsNo0fSZBQborOhwFz69/1B+BF9kB6+gQE4EMcSpDThRFYjxPClrhHMZD/x6PmGFwGoSN3WliQky8nlBf+WrpVRNcTyi+IRfLX2w4OyUzJb+6dqQ2uSbNxoNRcBXsYy94PRiWie46v8wIZKfED3CbPYaM6fT8uAsmwlRCEs176icln9PwWJpO3mISGmbFzjYNcbz99Snl/lAEoKlSWTw==-MIIElTCCAn2gAwIBAgIBCTANBgkqhkiG9w0BAQsFADAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMB4XDTE4MTEwMTEyMjk0NloXDTIwMTEwMjEyMjk0NlowaDELMAkGA1UEBhMCQ1oxDjAMBgNVBAgMBU51c2xlMQ8wDQYDVQQHDAZQcmFndWUxGTAXBgNVBAoMEEpldEJyYWlucyBzLnIuby4xHTAbBgNVBAMMFHByb2QzeS1mcm9tLTIwMTgxMTAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxcQkq+zdxlR2mmRYBPzGbUNdMN6OaXiXzxIWtMEkrJMO/5oUfQJbLLuMSMK0QHFmaI37WShyxZcfRCidwXjot4zmNBKnlyHodDij/78TmVqFl8nOeD5+07B8VEaIu7c3E1N+e1doC6wht4I4+IEmtsPAdoaj5WCQVQbrI8KeT8M9VcBIWX7fD0fhexfg3ZRt0xqwMcXGNp3DdJHiO0rCdU+Itv7EmtnSVq9jBG1usMSFvMowR25mju2JcPFp1+I4ZI+FqgR8gyG8oiNDyNEoAbsR3lOpI7grUYSvkB/xVy/VoklPCK2h0f0GJxFjnye8NT1PAywoyl7RmiAVRE/EKwIDAQABo4GZMIGWMAkGA1UdEwQCMAAwHQYDVR0OBBYEFGEpG9oZGcfLMGNBkY7SgHiMGgTcMEgGA1UdIwRBMD+AFKOetkhnQhI2Qb1t4Lm0oFKLl/GzoRykGjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBggkA0myxg7KDeeEwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0PBAQDAgWgMA0GCSqGSIb3DQEBCwUAA4ICAQAF8uc+YJOHHwOFcPzmbjcxNDuGoOUIP+2h1R75Lecswb7ru2LWWSUMtXVKQzChLNPn/72W0k+oI056tgiwuG7M49LXp4zQVlQnFmWU1wwGvVhq5R63Rpjx1zjGUhcXgayu7+9zMUW596Lbomsg8qVve6euqsrFicYkIIuUu4zYPndJwfe0YkS5nY72SHnNdbPhEnN8wcB2Kz+OIG0lih3yz5EqFhld03bGp222ZQCIghCTVL6QBNadGsiN/lWLl4JdR3lJkZzlpFdiHijoVRdWeSWqM4y0t23c92HXKrgppoSV18XMxrWVdoSM3nuMHwxGhFyde05OdDtLpCv+jlWf5REAHHA201pAU6bJSZINyHDUTB+Beo28rRXSwSh3OUIvYwKNVeoBY+KwOJ7WnuTCUq1meE6GkKc4D/cXmgpOyW/1SmBz3XjVIi/zprZ0zf3qH5mkphtg6ksjKgKjmx1cXfZAAX6wcDBNaCL+Ortep1Dh8xDUbqbBVNBL4jbiL3i3xsfNiyJgaZ5sX7i8tmStEpLbPwvHcByuf59qJhV/bZOl8KqJBETCDJcY6O2aqhTUy+9x93ThKs1GKrRPePrWPluud7ttlgtRveit/pcBrnQcXOl1rHq7ByB8CFAxNotRUYL9IF5n3wJOgkPojMy6jetQA5Ogc8Sm7RG6vg1yow==</textarea>
+    </div>
+</div>
+<div id="m-toast">1231</div>
+</body>
+</html>

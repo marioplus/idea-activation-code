@@ -4,10 +4,11 @@ import com.marioplus12.ideareg.util.archiver.UnzipUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 /**
  * @author marioplus12
  */
-@RestController
+@Controller
 @RequestMapping
 @Slf4j
 public class RegController {
@@ -41,13 +42,15 @@ public class RegController {
     private final ThreadLocal<WebClient> webClientThreadLocal = ThreadLocal.withInitial(() -> WebClient.builder().build());
 
     @GetMapping()
-    public HashMap<String, String> getActivationCode() throws IOException {
+    public String getActivationCode(Model model) throws IOException {
         Path savePath = this.getSavePath();
         if (!savePath.toFile().exists()) {
             log.info("从远程获取激活码：{}", LocalDateTime.now().toString());
             this.downloadActivationCode();
         }
-        return this.getActivationCodeFromLocal(savePath);
+        HashMap<String, String> codeMap = this.getActivationCodeFromLocal(savePath);
+        model.addAttribute("codeMap", codeMap);
+        return "index";
     }
 
     public void downloadActivationCode() {

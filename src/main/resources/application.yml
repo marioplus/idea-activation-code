@@ -1,6 +1,15 @@
 server:
-  servlet:
-    context-path: /idea/activationCode
   port: 8080
+
+#thymeleaf 配置
+spring:
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    #缓存设置为false, 这样修改之后马上生效，便于调试
+    cache: false
+
 activation-code-url: http://idea.medeming.com/jets/images/jihuoma.zip
-base-save-path: C:/Users/mario/Desktop/
+base-save-path: ./
