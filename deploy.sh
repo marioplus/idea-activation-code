@@ -1,9 +1,9 @@
 #!/bin/bash
 appPort=8080
-appDir=/mnt/workspace/project/activation-code
+appName=idea-activation-code
+appDir=/mnt/workspace/project/${appName}
 appTargetDir=${appDir}/target/
-appName=activation-code
-appLogDir=/mnt/workspace/log/${appName}/dev/${appName}-info.log
+appLogDir={appDir}/log/logback_info.log
 jvmOption=
 springOption=
 
