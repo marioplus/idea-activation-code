@@ -5,7 +5,7 @@ appDir=/mnt/workspace/project/${appName}
 appTargetDir=${appDir}/target/
 appLogDir=${appDir}/log/logback_info.log
 jvmOption=
-springOption=
+springOption=--logging.file.path=${appLogDir}
 
 # 颜色输出
 printLog() {

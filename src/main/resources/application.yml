@@ -13,3 +13,6 @@ spring:
 
 activation-code-url: http://idea.medeming.com/jets/images/jihuoma.zip
 base-save-path: ./
+
+project:
+  name: idea-activation-code
