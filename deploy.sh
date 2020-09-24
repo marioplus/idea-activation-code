@@ -1,5 +1,5 @@
 #!/bin/bash
-appPort=8080
+appPort=9005
 appName=idea-activation-code
 appDir=/mnt/workspace/project/${appName}
 appTargetDir=${appDir}/target/
