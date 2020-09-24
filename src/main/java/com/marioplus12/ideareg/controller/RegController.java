@@ -1,7 +1,9 @@
 package com.marioplus12.ideareg.controller;
 
+import ch.qos.logback.core.rolling.helper.FileStoreUtil;
 import com.marioplus12.ideareg.util.archiver.UnzipUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -24,12 +26,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author marioplus12
  */
 @Controller
-@RequestMapping
+@RequestMapping("/idea/code")
 @Slf4j
 public class RegController {
 
@@ -41,14 +44,20 @@ public class RegController {
 
     private final ThreadLocal<WebClient> webClientThreadLocal = ThreadLocal.withInitial(() -> WebClient.builder().build());
 
-    @GetMapping()
+    @GetMapping("/refresh")
+    public String refresh(Model model) throws IOException {
+        FileUtils.deleteDirectory(getSavePath().toFile());
+        return getActivationCode(model);
+    }
+
+    @GetMapping
     public String getActivationCode(Model model) throws IOException {
         Path savePath = this.getSavePath();
         if (!savePath.toFile().exists()) {
             log.info("从远程获取激活码：{}", LocalDateTime.now().toString());
             this.downloadActivationCode();
         }
-        HashMap<String, String> codeMap = this.getActivationCodeFromLocal(savePath);
+        Map<String, String> codeMap = this.getActivationCodeFromLocal(savePath);
         model.addAttribute("codeMap", codeMap);
         return "index";
     }
@@ -63,7 +72,7 @@ public class RegController {
             Resource resource = response.bodyToMono(Resource.class).block();
             UnzipUtil.decompression(resource.getInputStream(), this.getSavePath());
         } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -76,7 +85,7 @@ public class RegController {
             return null;
         }
 
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>(16);
         File file = path.toFile();
         if (!file.isDirectory() && StringUtils.endsWithIgnoreCase(file.getName(), ".txt")) {
             String code = String.join("\n", Files.readAllLines(file.toPath()));

@@ -1,14 +1,14 @@
 server:
   port: 8080
 
-#thymeleaf ÅäÖÃ
+#thymeleaf é…ç½®
 spring:
   thymeleaf:
     mode: HTML
     encoding: UTF-8
     servlet:
       content-type: text/html
-    #»º´æÉèÖÃÎªfalse, ÕâÑùĞŞ¸ÄÖ®ºóÂíÉÏÉúĞ§£¬±ãÓÚµ÷ÊÔ
+    #ç¼“å­˜è®¾ç½®ä¸ºfalse, è¿™æ ·ä¿®æ”¹ä¹‹åé©¬ä¸Šç”Ÿæ•ˆï¼Œä¾¿äºè°ƒè¯•
     cache: false
 
 activation-code-url: http://idea.medeming.com/jets/images/jihuoma.zip
