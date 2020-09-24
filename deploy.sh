@@ -3,7 +3,7 @@ appPort=9005
 appName=idea-activation-code
 appDir=/mnt/workspace/project/${appName}
 appTargetDir=${appDir}/target/
-appLogDir={appDir}/log/logback_info.log
+appLogDir=${appDir}/log/logback_info.log
 jvmOption=
 springOption=
 
