@@ -3,9 +3,9 @@ appPort=9005
 appName=idea-activation-code
 appDir=/mnt/workspace/project/${appName}
 appTargetDir=${appDir}/target/
-appLogDir=${appDir}/log/logback_info.log
+appLogDir=${appDir}/logs/logback_info.log
 jvmOption=
-springOption=--logging.file.path=${appLogDir}
+springOption=--logging.file.path=${appDir}/logs
 
 # 颜色输出
 printLog() {
