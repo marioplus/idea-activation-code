@@ -1,5 +1,6 @@
 package com.marioplus12.ideareg.util.archiver;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -22,6 +23,7 @@ import java.util.Objects;
  *
  * @author marioplus12
  */
+@Slf4j
 public class UnzipUtil {
 
     /**
@@ -54,11 +56,11 @@ public class UnzipUtil {
         if (!saveDir.exists()) {
             boolean mkdirs = saveDir.mkdirs();
             if (!mkdirs) {
-                throw new DecompressionException("创建存放解压文件的文件夹失败，路径：" + path.toString());
+                throw new DecompressionException("创建存放解压文件的文件夹失败，路径：" + path);
             }
         }
         if (!saveDir.isDirectory()) {
-            throw new DecompressionException("指定存放解压文件的文件夹为文件，路径：" + path.toString());
+            throw new DecompressionException("指定存放解压文件的文件夹为文件，路径：" + path);
         }
     }
 
@@ -69,6 +71,7 @@ public class UnzipUtil {
      * @param path 解压路径
      */
     private static List<Path> doDecompression(InputStream is, Path path) throws DecompressionException {
+        log.debug("开始解压...");
         ArchiveInputStream ais = new ZipArchiveInputStream(is);
         ArrayList<Path> savedPathList = Lists.newArrayList();
         try {
@@ -77,19 +80,22 @@ public class UnzipUtil {
                 if (!ais.canReadEntryData(entry)) {
                     continue;
                 }
+                log.debug("解压文件：{}", entry.getName());
                 String name = String.format("%s/%s", path.toString(), entry.getName());
                 Path currPath = Paths.get(name);
                 Files.copy(ais, currPath, StandardCopyOption.REPLACE_EXISTING);
+                log.debug("解压完毕：{}", entry.getName());
                 savedPathList.add(currPath);
             }
         } catch (IOException e) {
             throw new DecompressionException("解压失败", e);
         }
+        log.debug("解压完毕");
         return savedPathList;
     }
 
     public static void main(String[] args) throws IOException {
-        FileInputStream zipStream = new FileInputStream(new File("C:\\Users\\mario\\Desktop\\jihuoma.zip"));
+        FileInputStream zipStream = new FileInputStream("C:\\Users\\mario\\Desktop\\jihuoma.zip");
         Path path = Paths.get("C:/Users/mario/Desktop/jihuoma");
 
         decompression(zipStream, path);

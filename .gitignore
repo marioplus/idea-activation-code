@@ -34,3 +34,6 @@ build/
 /src/test/
 
 logs
+
+temp
+cache

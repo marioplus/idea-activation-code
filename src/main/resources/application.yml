@@ -11,9 +11,11 @@ spring:
     #缓存设置为false, 这样修改之后马上生效，便于调试
     cache: false
 
-activation-code-url: http://idea.medeming.com/jets/images/jihuoma.zip
-base-save-path: ./
+activation-code-url: https://idea.medeming.com/jets/images/jihuoma.zip
+base-save-path: ./cache/
 
 logging:
   file:
     path: ./logs
+  level:
+    com.marioplus12.ideareg: debug
